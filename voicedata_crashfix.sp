@@ -27,7 +27,7 @@ public void OnPluginStart()
 {
 	CreateConVar("sm_voicedatacrashfix_version", PLUGIN_VERSION, "Voice Data Crash Fix plugin version.", FCVAR_NOTIFY|FCVAR_DONTRECORD);
 	
-	punishment = CreateConVar("sm_voicedatacrashfix_punishment", "1", "Punishment. 0 = Just mute, 1 = Kick, 2 = Perm ban", _, true, 1.0, true, 2.0);
+	punishment = CreateConVar("sm_voicedatacrashfix_punishment", "1", "Punishment. 0 = Just mute, 1 = Kick, 2 = Perm ban", _, true, 0.0, true, 2.0);
 	maxVoicePackets = CreateConVar("sm_voicedatacrashfix_count", "92", "How many packets per second max?");
 	
 	AutoExecConfig(); // autogenerate cfg file
