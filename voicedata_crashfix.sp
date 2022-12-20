@@ -71,9 +71,25 @@ public void OnClientSpeakingEx(int client)
 	if (++g_voicePacketCount[client] > iMaxVoicePackets) 
 	{
 		char id[64], ip[32];
-
-		GetClientAuthId(client, AuthId_Steam2, id, sizeof(id));  
+		
 		GetClientIP(client, ip, sizeof(ip));
+
+		if(!GetClientAuthId(client, AuthId_Steam2, id, sizeof(id))) 
+		{
+			// not valid steamid so dont ban, kick instead
+			LogToPluginFile("%N (ID: INVALID | IP: %s) was kicked for trying to crash the server with voice data overflow. Total packets: %i", 
+			client, 
+			ip, 
+			g_voicePacketCount[client]);
+			
+			if (IsClientInGame(client) && GetClientListeningFlags(client) == VOICE_MUTED) return; // dont flood
+		
+			SetClientListeningFlags(client, VOICE_MUTED);
+			
+			ServerCommand("kickid %d", GetClientUserId(client));
+			
+			return;
+		}
 		
 		char sPunishment[64];
 		switch (iPunishMent)
