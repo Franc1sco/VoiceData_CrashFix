@@ -1,11 +1,11 @@
 #pragma semicolon 1
 #include <sourcemod>
 #include <sdktools>
-//#include <voiceannounce_ex> // using sourcemod natives
+#include <voiceannounce_ex>
 #pragma newdecls required
 
 #define PATH "logs/voicedata_crashfix.log"
-#define PLUGIN_VERSION		"1.1"	
+#define PLUGIN_VERSION		"1.1 voiceannounce_ex version"	
 
 ConVar maxVoicePackets;
 ConVar punishment;
@@ -66,7 +66,7 @@ public Action ResetCount(Handle timer)
 	return Plugin_Continue;
 }
 
-public void OnClientSpeaking(int client)
+public void OnClientSpeakingEx(int client)
 {
 	if (++g_voicePacketCount[client] > iMaxVoicePackets) 
 	{
