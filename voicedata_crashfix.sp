@@ -5,7 +5,7 @@
 #pragma newdecls required
 
 #define PATH "logs/voicedata_crashfix.log"
-#define PLUGIN_VERSION		"1.1 voiceannounce_ex version"	
+#define PLUGIN_VERSION		"1.2 voiceannounce_ex version"	
 
 ConVar maxVoicePackets;
 ConVar punishment;
