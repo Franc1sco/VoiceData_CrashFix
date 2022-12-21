@@ -5,7 +5,7 @@
 #pragma newdecls required
 
 #define PATH "logs/voicedata_crashfix.log"
-#define PLUGIN_VERSION		"1.2"	
+#define PLUGIN_VERSION		"1.3b"	
 
 ConVar maxVoicePackets;
 ConVar punishment;
@@ -86,7 +86,10 @@ public void OnClientSpeaking(int client)
 		
 			SetClientListeningFlags(client, VOICE_MUTED);
 			
-			ServerCommand("kickid %d", GetClientUserId(client));
+			if (!IsClientInKickQueue(client))
+			{
+				KickClient(client, "Voice data overflow detected!");
+			}
 			
 			return;
 		}
