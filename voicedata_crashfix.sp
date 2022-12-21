@@ -92,8 +92,7 @@ public void OnClientSpeaking(int client)
 			ip,
 			g_voicePacketCount[client]);
 			
-			if (IsClientInGame(client) && GetClientListeningFlags(client) == VOICE_MUTED) return; // dont flood
-			else {
+			if (!IsClientInGame(client) || GetClientListeningFlags(client) != VOICE_MUTED) {
 				SetClientListeningFlags(client, VOICE_MUTED);
 			}
 			
