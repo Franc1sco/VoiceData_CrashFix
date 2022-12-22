@@ -5,7 +5,7 @@
 #pragma newdecls required
 
 #define PATH "logs/voicedata_crashfix.log"
-#define PLUGIN_VERSION		"1.2 voiceannounce_ex version"	
+#define PLUGIN_VERSION		"1.3 voiceannounce_ex version"	
 
 ConVar maxVoicePackets;
 ConVar punishment;
@@ -70,23 +70,36 @@ public void OnClientSpeakingEx(int client)
 {
 	if (++g_voicePacketCount[client] > iMaxVoicePackets) 
 	{
-		char id[64], ip[32];
+		char id[128], ip[32];
 		
 		GetClientIP(client, ip, sizeof(ip));
 
 		if(!GetClientAuthId(client, AuthId_Steam2, id, sizeof(id))) 
 		{
 			// not valid steamid so dont ban, kick instead
-			LogToPluginFile("%N (ID: INVALID | IP: %s) was kicked for trying to crash the server with voice data overflow. Total packets: %i", 
-			client, 
-			ip, 
+			if (GetClientAuthId(client, AuthId_Steam2, id, sizeof(id), false))
+			{
+	            Format(id, sizeof(id), "%s (Not Validated)", id);
+			}
+			else
+			{
+	            strcopy(id, sizeof(id), "Unknown");
+			}
+
+			LogToPluginFile("%N (ID: %s | IP: %s) was kicked for trying to crash the server with voice data overflow. Total packets: %i",
+			client,
+			id,
+			ip,
 			g_voicePacketCount[client]);
 			
-			if (IsClientInGame(client) && GetClientListeningFlags(client) == VOICE_MUTED) return; // dont flood
-		
-			SetClientListeningFlags(client, VOICE_MUTED);
+			if (!IsClientInGame(client) || GetClientListeningFlags(client) != VOICE_MUTED) {
+				SetClientListeningFlags(client, VOICE_MUTED);
+			}
 			
-			ServerCommand("kickid %d", GetClientUserId(client));
+			if (!IsClientInKickQueue(client))
+			{
+				KickClient(client, "Voice data overflow detected!");
+			}
 			
 			return;
 		}
