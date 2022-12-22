@@ -145,7 +145,10 @@ public void OnClientSpeaking(int client)
 			}
 			case 2:
 			{
-				ServerCommand("sm_ban #%d 0 \"Voice data overflow detected!\"", GetClientUserId(client));
+				if (!IsClientInKickQueue(client)) // ban perform a kick too, so for dont flood ban command
+				{
+					ServerCommand("sm_ban #%d 0 \"Voice data overflow detected!\"", GetClientUserId(client));
+				}
 			}
 		}
 	}
